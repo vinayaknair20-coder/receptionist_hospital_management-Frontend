@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareHealth - Receptionist Dashboard</title>
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="CareHealth - Receptionist Dashboard">
+    <meta property="og:description" content="Manage appointments, patients, billing, and reports efficiently at the CareHealth reception desk.">
+    <meta property="og:url" content="https://www.carehealth.com/reception.html">
+    <meta property="og:site_name" content="CareHealth Hospital">
+    <meta property="og:image" content="https://www.carehealth.com/assets/og/reception-dashboard.jpg">
+    <meta property="og:image:alt" content="CareHealth receptionist dashboard interface">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/receptionist-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <script>
+        if (!localStorage.getItem('receptionistLogin')) {
+            alert('Access denied! Please login first.');
+            window.location.href = '../html/index.html';
+        }
+    </script>
+
+    <!-- Fixed Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm" id="mainNavbar">
+        <div class="container-fluid px-2 px-sm-3">
+            <!-- Mobile hamburger -->
+            <button id="sidebarToggleBtn" class="navbar-toggler border-0 p-1 me-2" type="button" aria-label="Toggle Sidebar">
+                <i class="fas fa-bars fs-5"></i>
+            </button>
+            
+            <!-- Brand - responsive text -->
+            <a class="navbar-brand fw-bold text-white d-flex align-items-center flex-shrink-0" href="#" aria-label="CareHealth Reception">
+                <i class="fas fa-heartbeat me-2 text-warning"></i>
+                <span class="d-none d-sm-inline">CareHealth Reception Desk</span>
+                <span class="d-inline d-sm-none">CareHealth</span>
+            </a>
+            
+            <!-- Right side controls -->
+            <div class="d-flex align-items-center gap-2">
+                <span class="navbar-text text-white-50 d-none d-md-inline me-1">
+                    <i class="fas fa-user-circle me-1"></i>Receptionist
+                </span>
+                
+                <button class="btn btn-outline-warning btn-sm rounded-circle p-2 d-flex align-items-center justify-content-center" 
+                        id="dashDarkModeToggle" 
+                        title="Toggle Dark Mode" 
+                        aria-label="Toggle Dark Mode"
+                        style="width: 36px; height: 36px;">
+                    <i class="fas fa-moon" id="dashDarkModeIcon"></i>
+                </button>
+                
+                <button class="btn btn-outline-light btn-sm rounded-pill px-3 py-2" onclick="logout()" aria-label="Logout">
+                    <i class="fas fa-sign-out-alt me-1"></i>
+                    <span class="d-none d-sm-inline">Logout</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Layout Container -->
+    <div class="container-fluid p-0" style="margin-top: 60px;">
+        <div class="row g-0 min-vh-100">
+            <!-- Sidebar -->
+            <div class="col-auto sidebar-container">
+                <aside class="sidebar d-flex flex-column" role="navigation" aria-label="Main navigation">
+                    <div class="list-group list-group-flush flex-fill">
+                        <a href="#" class="list-group-item list-group-item-action active" onclick="showSection(event, 'dashboard')">
+                            <i class="fas fa-tachometer-alt me-2"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action" onclick="showSection(event, 'appointments')">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            <span>Appointments</span>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action" onclick="showSection(event, 'patients')">
+                            <i class="fas fa-users me-2"></i>
+                            <span>Patients</span>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action" onclick="showSection(event, 'billing')">
+                            <i class="fas fa-dollar-sign me-2"></i>
+                            <span>Billing</span>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action" onclick="showSection(event, 'reports')">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            <span>Reports</span>
+                        </a>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col main-content-wrapper">
+                <main class="main-content p-3 p-md-4" role="main">
+                    
+                    <!-- Dashboard Section -->
+                    <section id="dashboard" class="content-section">
+                        <div class="mb-4">
+                            <h1 class="h2 mb-3 d-flex align-items-center">
+                                <i class="fas fa-hospital-user text-primary me-2"></i>
+                                Welcome, Receptionist!
+                            </h1>
+                            
+                            <!-- Stats Cards -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-6 col-lg-3">
+                                    <div class="stat-card h-100">
+                                        <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                                        <div class="stat-number" id="todayAppointments">0</div>
+                                        <div class="stat-label">Today's Appointments</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-lg-3">
+                                    <div class="stat-card h-100">
+                                        <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+                                        <div class="stat-number" id="checkedInPatients">0</div>
+                                        <div class="stat-label">Checked In</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-lg-3">
+                                    <div class="stat-card h-100">
+                                        <div class="stat-icon"><i class="fas fa-bed"></i></div>
+                                        <div class="stat-number" id="waitingPatients">0</div>
+                                        <div class="stat-label">Waiting</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-lg-3">
+                                    <div class="stat-card h-100">
+                                        <div class="stat-icon"><i class="fas fa-rupee-sign"></i></div>
+                                        <div class="stat-number" id="todayRevenue">₹0</div>
+                                        <div class="stat-label">Today's Revenue</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Action Buttons -->
+                            <div class="row g-2 mb-4">
+                                <div class="col-6 col-md-3">
+                                    <button class="btn btn-outline-success w-100 h-100 py-3 d-flex flex-column align-items-center" onclick="openAddPatientModal()">
+                                        <i class="fas fa-user-plus fs-4 mb-2"></i>
+                                        <span class="small">Add Patient</span>
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <button class="btn btn-outline-primary w-100 h-100 py-3 d-flex flex-column align-items-center" onclick="openAddAppointmentModal()">
+                                        <i class="fas fa-calendar-plus fs-4 mb-2"></i>
+                                        <span class="small">New Appointment</span>
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <button class="btn btn-outline-info w-100 h-100 py-3 d-flex flex-column align-items-center" onclick="showSection(event,'patients');selectPatientTab('list')">
+                                        <i class="fas fa-list fs-4 mb-2"></i>
+                                        <span class="small">Patient List</span>
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <button class="btn btn-outline-warning w-100 h-100 py-3 d-flex flex-column align-items-center" onclick="showSection(event,'billing')">
+                                        <i class="fas fa-credit-card fs-4 mb-2"></i>
+                                        <span class="small">Billing</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Upcoming Appointments Card -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0 text-white">
+                                        <i class="fas fa-clock me-2"></i>Upcoming Appointments
+                                    </h6>
+                                </div>
+                                <div class="card-body" id="nextAppointments">
+                                    <div class="text-muted">Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Appointments Section -->
+                    <section id="appointments" class="content-section" style="display:none;">
+                        <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between mb-3 gap-2">
+                            <h1 class="h2 mb-0">
+                                <i class="fas fa-calendar text-primary me-2"></i>Appointments
+                            </h1>
+                            <button class="btn btn-primary" onclick="openAddAppointmentModal()">
+                                <i class="fas fa-plus me-1"></i>Add New
+                            </button>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="input-group" style="max-width: 400px;">
+                                <input type="text" class="form-control" placeholder="Search appointments..." 
+                                       id="searchAppointments" onkeyup="searchAppointments()">
+                                <button class="btn btn-outline-secondary" type="button" onclick="searchAppointments()">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0 align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th class="border-0">Time</th>
+                                                <th class="border-0">Patient</th>
+                                                <th class="border-0 d-none d-md-table-cell">Doctor</th>
+                                                <th class="border-0 d-none d-lg-table-cell">Department</th>
+                                                <th class="border-0">Status</th>
+                                                <th class="border-0">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="appointmentsTable"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Patients Section -->
+                    <section id="patients" class="content-section" style="display:none;">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex flex-column d-md-flex-row align-items-start align-items-md-center gap-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-users me-2"></i>
+                                    <span>Patient Management</span>
+                                </div>
+                                <ul class="nav nav-pills ms-auto" id="patTabs">
+                                    <li class="nav-item">
+                                        <button class="nav-link active" onclick="selectPatientTab('add')" id="patTabAdd">
+                                            <i class="fas fa-user-plus me-1"></i>Add
+                                        </button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link" onclick="selectPatientTab('list')" id="patTabList">
+                                            <i class="fas fa-list me-1"></i>List
+                                        </button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link" onclick="selectPatientTab('search')" id="patTabSearch">
+                                            <i class="fas fa-search me-1"></i>Search
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body" id="patientTabPane"></div>
+                            <div class="card-footer text-end">
+                                <button class="btn btn-dark" onclick="showMainMenu()">
+                                    <i class="fas fa-arrow-left me-2"></i>Go to Main Menu
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Billing Section -->
+                    <section id="billing" class="content-section" style="display:none;">
+                        <h1 class="h2 mb-3">
+                            <i class="fas fa-dollar-sign text-primary me-2"></i>Billing & Payments
+                        </h1>
+                        <div class="row g-3">
+                            <div class="col-12 col-lg-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0 text-white">
+                                            <i class="fas fa-credit-card me-2"></i>Process Payment
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="billingForm">
+                                            <div class="row g-3">
+                                                <div class="col-12 col-md-6">
+                                                    <label class="form-label fw-semibold">Patient</label>
+                                                    <select class="form-select" id="billingPatient" required>
+                                                        <option value="">Select Patient</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <label class="form-label fw-semibold">Service</label>
+                                                    <select class="form-select" id="billingService" required>
+                                                        <option value="">Select Service</option>
+                                                        <option value="Consultation|500">Consultation - ₹500</option>
+                                                        <option value="Lab Tests|1500">Lab Tests - ₹1500</option>
+                                                        <option value="X-Ray|800">X-Ray - ₹800</option>
+                                                        <option value="MRI Scan|5000">MRI Scan - ₹5000</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <label class="form-label fw-semibold">Amount</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">₹</span>
+                                                        <input type="number" class="form-control" id="billingAmount" min="1" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <label class="form-label fw-semibold">Payment Method</label>
+                                                    <select class="form-select" id="paymentMethod" required>
+                                                        <option value="">Select Method</option>
+                                                        <option value="cash">Cash</option>
+                                                        <option value="card">Card</option>
+                                                        <option value="insurance">Insurance</option>
+                                                        <option value="upi">UPI</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-primary px-5">
+                                                        <i class="fas fa-credit-card me-2"></i>Process Payment
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-4">
+                                <div class="card">
+                                    <div class="card-header bg-info text-white">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-history me-2"></i>Recent Payments
+                                        </h6>
+                                    </div>
+                                    <div class="card-body" id="recentPayments">
+                                        <div class="text-muted">Loading payments...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Reports Section -->
+                    <section id="reports" class="content-section" style="display:none;">
+                        <h1 class="h2 mb-3">
+                            <i class="fas fa-chart-bar text-primary me-2"></i>Reports & Analytics
+                        </h1>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-12 col-md-4">
+                                <div class="card text-center h-100">
+                                    <div class="card-body">
+                                        <h2 class="text-primary mb-2" id="reportAppointments">0</h2>
+                                        <p class="mb-0 fw-semibold">Monthly Appointments</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="card text-center h-100">
+                                    <div class="card-body">
+                                        <h2 class="text-success mb-2" id="reportRevenue">₹0</h2>
+                                        <p class="mb-0 fw-semibold">Monthly Revenue</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="card text-center h-100">
+                                    <div class="card-body">
+                                        <h2 class="text-info mb-2" id="reportPatients">0</h2>
+                                        <p class="mb-0 fw-semibold">New Patients</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-lg-8 mx-auto">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0 text-white">
+                                            <i class="fas fa-chart-pie me-2"></i>Appointment Status Distribution
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="statusPieChart" height="200" aria-label="Appointment status pie chart" role="img"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Patient Add/Edit Modal -->
+    <div class="modal fade" id="patientModal" tabindex="-1" aria-labelledby="addPatientLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="addEditPatientForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addPatientLabel">
+                            <i class="fas fa-user-plus me-2"></i>Add/Edit Patient
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label for="patFullName" class="form-label fw-semibold">Full Name</label>
+                                <input type="text" class="form-control" id="patFullName" required>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label for="patAge" class="form-label fw-semibold">Age</label>
+                                <input type="number" class="form-control" id="patAge" required min="0" max="120">
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label for="patBlood" class="form-label fw-semibold">Blood Group</label>
+                                <input type="text" class="form-control" id="patBlood" required maxlength="4" placeholder="O+, AB-">
+                            </div>
+                            <div class="col-12">
+                                <label for="patPhone" class="form-label fw-semibold">Phone Number</label>
+                                <input type="tel" class="form-control" id="patPhone" required pattern="\d{10}">
+                            </div>
+                            <div class="col-12">
+                                <label for="patAddress" class="form-label fw-semibold">Address</label>
+                                <textarea class="form-control" id="patAddress" required rows="2"></textarea>
+                            </div>
+                            <input type="hidden" id="editPatientRegNo">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                        <button id="patModalSubmitBtn" class="btn btn-primary" type="submit">
+                            <i class="fas fa-save me-2"></i>Save Patient
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Detail Modal -->
+    <div class="modal fade" id="patientDetailModal" tabindex="-1" aria-labelledby="patientDetailLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="patientDetailLabel">
+                        <i class="fas fa-user me-2"></i>Patient Details
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close modal"></button>
+                </div>
+                <div id="patientDetailBody" class="modal-body"></div>
+                <div class="modal-footer" id="patientDetailFooter"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Modal -->
+    <div class="modal fade" id="addAppointmentModal" tabindex="-1" aria-labelledby="addAptLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addAptLabel">
+                        <i class="fas fa-calendar-plus me-2"></i>Add Appointment
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close modal"></button>
+                </div>
+                <form id="addAppointmentForm">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="aptPatient" class="form-label fw-semibold">Patient</label>
+                                <select id="aptPatient" class="form-select" required></select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="aptDoctor" class="form-label fw-semibold">Doctor</label>
+                                <input type="text" class="form-control" id="aptDoctor" required placeholder="Enter doctor name">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="aptDepartment" class="form-label fw-semibold">Department</label>
+                                <select id="aptDepartment" class="form-select" required>
+                                    <option value="">Select Department</option>
+                                    <option value="Cardiology">Cardiology</option>
+                                    <option value="Neurology">Neurology</option>
+                                    <option value="Pediatrics">Pediatrics</option>
+                                    <option value="Orthopedics">Orthopedics</option>
+                                    <option value="Emergency">Emergency</option>
+                                    <option value="Laboratory">Laboratory</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="aptDate" class="form-label fw-semibold">Date</label>
+                                <input type="date" id="aptDate" class="form-control" required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="aptTime" class="form-label fw-semibold">Time</label>
+                                <input type="time" id="aptTime" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check me-2"></i>Add Appointment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/receptionist-dashboard.js"></script>
+</body>
+</html>

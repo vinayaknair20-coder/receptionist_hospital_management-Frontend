@@ -1,0 +1,425 @@
+/* Clean Hospital Website Styles with Fixed Dark Mode */
+:root {
+    --primary-color: #4285f4;
+    --secondary-color: #34a853;
+    --accent-color: #ea4335;
+    --text-dark: #202124;
+    --text-light: #5f6368;
+    --bg-color: #ffffff;
+    --bg-light: #f8f9fa;
+    --text-color: #202124;
+    --text-muted: #6c757d;
+    --card-bg: #ffffff;
+    --border-color: #e8eaed;
+    --navbar-bg: #ffffff;
+}
+
+/* Dark mode colors */
+body.dark-mode {
+    --bg-color: #1a1a1a;
+    --bg-light: #2d2d2d;
+    --text-color: #ffffff;
+    --text-muted: #cbd5e0;
+    --card-bg: #2d2d2d;
+    --border-color: #4a5568;
+    --navbar-bg: #2d2d2d;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color) !important;
+    background-color: var(--bg-color) !important;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Force text colors in dark mode */
+body.dark-mode * {
+    color: var(--text-color);
+}
+body.dark-mode .text-muted {
+    color: var(--text-muted) !important;
+}
+body.dark-mode h1,
+body.dark-mode h2, 
+body.dark-mode h3, 
+body.dark-mode h4, 
+body.dark-mode h5, 
+body.dark-mode h6 {
+    color: #ffffff !important;
+}
+body.dark-mode p {
+    color: var(--text-color) !important;
+}
+body.dark-mode .card-title {
+    color: #ffffff !important;
+}
+body.dark-mode .card-text {
+    color: var(--text-muted) !important;
+}
+
+/* Navigation */
+.navbar {
+    transition: all 0.3s;
+    padding: 1rem 0;
+    background-color: var(--navbar-bg) !important;
+    border-bottom: 1px solid var(--border-color);
+}
+
+body.dark-mode .navbar {
+    background-color: var(--navbar-bg) !important;
+}
+body.dark-mode .navbar-light .navbar-nav .nav-link {
+    color: var(--text-color) !important;
+}
+body.dark-mode .navbar-light .navbar-nav .nav-link:hover {
+    color: var(--primary-color) !important;
+}
+body.dark-mode .navbar-light .navbar-toggler {
+    border-color: var(--border-color);
+    background-color: var(--card-bg);
+}
+body.dark-mode .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+.navbar-brand {
+    font-size: 1.8rem;
+    color: var(--primary-color) !important;
+}
+
+/* Dark Mode Toggle Button */
+#darkModeToggle {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+#darkModeToggle:hover {
+    transform: rotate(180deg);
+}
+body.dark-mode #darkModeToggle {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Hero Section - Gradient */
+.hero-section {
+    background: linear-gradient(135deg, #4a36ae 0%, #0f172a 100%);
+    padding: 120px 0 80px;
+}
+.text-white-75 {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Sections and Cards */
+section {
+    transition: background-color 0.3s;
+    background-color: var(--bg-color);
+}
+.bg-light {
+    background-color: var(--bg-light) !important;
+}
+body.dark-mode section {
+    background-color: var(--bg-color);
+}
+body.dark-mode .bg-light {
+    background-color: var(--bg-light) !important;
+}
+.card {
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+    border-radius: 12px;
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color);
+    color: var(--text-color) !important;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
+}
+body.dark-mode .card {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+body.dark-mode .card:hover {
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5) !important;
+}
+
+/* Text Colors - Override */
+.text-muted {
+    color: var(--text-muted) !important;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-color) !important;
+}
+body.dark-mode .display-5,
+body.dark-mode .display-4 {
+    color: #ffffff !important;
+}
+body.dark-mode .lead {
+    color: var(--text-muted) !important;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #ffffff !important;
+}
+.btn-warning {
+    background: linear-gradient(45deg, #ffc107, #ffb300);
+    border: none;
+    color: #000 !important;
+}
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+body.dark-mode .btn-secondary {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color) !important;
+}
+
+/* Service Icons */
+.service-icon i {
+    transition: transform 0.3s;
+}
+.card:hover .service-icon i {
+    transform: scale(1.1);
+}
+
+/* Forms */
+.form-control {
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    padding: 0.75rem;
+    transition: border-color 0.3s, background-color 0.3s;
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+}
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(66, 133, 244, 0.25);
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+}
+.form-control::placeholder {
+    color: var(--text-muted) !important;
+}
+.form-label {
+    color: var(--text-color) !important;
+}
+body.dark-mode .form-control {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color);
+    color: var(--text-color) !important;
+}
+body.dark-mode .form-control:focus {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+body.dark-mode select.form-control option {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+/* Modal window */
+.modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+body.dark-mode .modal-content {
+    background-color: var(--card-bg) !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+body.dark-mode .modal-title {
+    color: #ffffff !important;
+}
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+}
+body.dark-mode .modal-header {
+    border-bottom-color: var(--border-color);
+}
+body.dark-mode .modal-footer {
+    border-top-color: var(--border-color);
+}
+body.dark-mode .btn-close {
+    filter: invert(1);
+} 
+.modal-sm {
+    max-width: 400px;
+}
+body.dark-mode .form-text {
+    color: var(--text-muted) !important;
+}
+
+/* Alert messages (toasts) */
+body.dark-mode .alert {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color);
+    color: var(--text-color) !important;
+}
+
+/* Footer Section */
+footer {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%) !important;
+    color: #e2e8f0;
+}
+footer h5, footer h6 {
+    color: #ffffff !important;
+    margin-bottom: 1rem;
+}
+footer .text-muted {
+    color: #a0aec0 !important;
+}
+footer p {
+    color: #a0aec0 !important;
+}
+footer a {
+    color: #a0aec0 !important;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+footer a:hover {
+    color: var(--primary-color) !important;
+    transform: translateX(3px);
+}
+footer i {
+    width: 20px;
+    text-align: center;
+    margin-right: 0.5rem;
+}
+footer .badge {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    margin: 0.25rem 0.5rem 0.25rem 0;
+    transition: transform 0.3s;
+    border-radius: 6px;
+    display: inline-block;
+}
+footer .badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+footer .fab {
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+    background: rgba(66, 133, 244, 0.1);
+    transition: all 0.3s;
+    margin-right: 0.5rem;
+}
+footer .fab:hover {
+    background: var(--primary-color);
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+/* Responsive Footer Design */
+@media (max-width: 768px) {
+    footer .col-lg-3,
+    footer .col-lg-2 {
+        margin-bottom: 2.5rem;
+    }
+    footer .d-flex.gap-3 {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .newsletter-form .input-group {
+        flex-direction: column;
+    }
+    .newsletter-form .form-control {
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+    }
+    .newsletter-form .btn {
+        border-radius: 8px;
+        width: 100%;
+    }
+    .legal-links {
+        text-align: center;
+    }
+    .legal-links a {
+        display: block;
+        margin: 0.5rem 0;
+    }
+    footer .text-md-end {
+        text-align: center !important;
+        margin-top: 1.5rem;
+    }
+}
+
+/* Responsive for sections & general */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 100px 0 50px;
+    }
+    .display-4 {
+        font-size: 2.5rem;
+    }
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Loading animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Dark Mode utility color tweaks for highlights/icons */
+body.dark-mode .rating i {
+    color: #ffc107 !important;
+}
+body.dark-mode .text-primary {
+    color: var(--primary-color) !important;
+}
+body.dark-mode .text-success {
+    color: #10b981 !important;
+}
+body.dark-mode .text-info {
+    color: #06b6d4 !important;
+}
+body.dark-mode .text-warning {
+    color: #f59e0b !important;
+}
+body.dark-mode .text-danger {
+    color: #ef4444 !important;
+}
+
+* {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
