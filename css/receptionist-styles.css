@@ -325,6 +325,7 @@ body.dark-mode .card-header {
     color:#ffe05a; 
 }
 
+/* BUTTON STYLES - FIXED FOR VISIBILITY */
 .btn {
     border-radius: 1000px !important;
     font-weight: 600;
@@ -332,10 +333,12 @@ body.dark-mode .card-header {
     font-size: 1.03rem;
     padding: 10px 25px;
     box-shadow: 0 2px 7px rgba(44,56,93,0.13);
-    border: none;
+    border: none !important;
     outline: none;
     transition: all .16s;
-    color: var(--text-color) !important;
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    
 }
 
 .btn-sm { 
@@ -343,14 +346,66 @@ body.dark-mode .card-header {
     padding: 7px 18px;
 }
 
+/* Specific button fixes for the black button issue */
+.btn-primary,
+.btn-secondary {
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+/* Primary button */
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+}
+
+/* Success button */
+.btn-success {
+    background-color: var(--secondary-color) !important;
+    color: #fff !important;
+}
+
+/* Info button */
+.btn-info {
+    background-color: var(--info-color) !important;
+    color: #fff !important;
+}
+
+/* Warning button */
+.btn-warning {
+    background-color: var(--warning-color) !important;
+    color: #000 !important;
+}
+
+/* Danger button */
+.btn-danger {
+    background-color: var(--danger-color) !important;
+    color: #fff !important;
+}
+
+/* Outline buttons */
 .btn-outline-primary, .btn-outline-success, .btn-outline-info, .btn-outline-warning {
     box-shadow: none; 
-    border-width: 2px;
+    border-width: 2px !important;
+    background-color: transparent !important;
     color: var(--text-color) !important;
 }
 
-:where(.btn-primary,.btn-success,.btn-info,.btn-warning) { 
-    color: #fff !important; 
+.btn-outline-primary {
+    border-color: var(--primary-color) !important;
+}
+
+.btn-outline-success {
+    border-color: var(--secondary-color) !important;
+}
+
+.btn-outline-info {
+    border-color: var(--info-color) !important;
+}
+
+.btn-outline-warning {
+    border-color: var(--warning-color) !important;
 }
 
 body.dark-mode .btn-outline-primary,
@@ -363,7 +418,25 @@ body.dark-mode .btn-outline-warning {
 .btn-outline-primary:hover, .btn-outline-success:hover, .btn-outline-warning:hover, .btn-outline-info:hover {
     background: var(--primary-color) !important;
     color: #fff !important;
-    border-color: var(--primary-color);
+    border-color: var(--primary-color) !important;
+}
+
+/* Button hover effects */
+.btn:hover {
+    background-color: var(--secondary-color) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+}
+
+/* Force fix for any problematic buttons */
+.btn[style*="background: black"],
+.btn[style*="background-color: black"],
+.btn[style*="background:#000"],
+.btn[style*="background-color:#000"],
+button[style*="background: black"],
+button[style*="background-color: black"] {
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
 }
 
 /* TABS */
@@ -628,7 +701,7 @@ body.dark-mode ::-webkit-scrollbar-thumb{
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0,0,0,0.5);
+        background: rgba(0, 0, 0, 0.5);
         z-index: 999;
     }
     
