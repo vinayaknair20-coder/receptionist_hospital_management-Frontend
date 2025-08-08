@@ -517,6 +517,6 @@ function logout() {
     if (confirm('Are you sure you want to logout?')) {
         localStorage.removeItem('receptionistLogin');
         localStorage.removeItem('userRole');
-        setTimeout(() => { window.location.href = '../html/index.html'; }, 800);
+        setTimeout(() => { window.location.href = '../index.html'; }, 800);
     }
 }
